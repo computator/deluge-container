@@ -1,15 +1,16 @@
 #!/bin/sh
 set -e
 
-INSTALL_DEPS='python3-pip python3-wheel python3-dev gcc'
 ctr=$(buildah from ubuntu)
 
-buildah run $ctr sh -c "apt-get update && apt-get -y install --no-install-recommends python3-libtorrent python3-setuptools ${INSTALL_DEPS}"
+buildah run $ctr sh -c 'apt-get update && apt-get -y install --no-install-recommends gpg gpg-agent'
+buildah run $ctr sh -c '. /etc/lsb-release && echo "deb http://ppa.launchpad.net/deluge-team/stable/ubuntu ${DISTRIB_CODENAME} main" > /etc/apt/sources.list.d/deluge.list'
+buildah copy $ctr 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x8eed8fb4a8e6da6dfdf0192bc5e6a5ed249ad24c' /tmp/deluge_ppa_key
+buildah run $ctr apt-key add /tmp/deluge_ppa_key
 
-buildah run $ctr pip3 install deluge
+buildah run $ctr sh -c 'apt-get update && apt-get -y install --no-install-recommends deluged deluge-console'
 deluge_ver=$(buildah run $ctr deluged -V | head -n 1 | cut -f2 -d ' ')
 
-buildah run $ctr sh -c "apt-get -y --auto-remove remove ${INSTALL_DEPS}"
 buildah run $ctr sh -c "[ -d /var/lib/apt/lists ] && rm -rf /var/lib/apt/lists/*"
 
 buildah copy $ctr entrypoint.sh /usr/local/bin/
