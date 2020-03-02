@@ -15,6 +15,16 @@ buildah run $ctr sh -c "[ -d /var/lib/apt/lists ] && rm -rf /var/lib/apt/lists/*
 
 buildah copy $ctr entrypoint.sh /usr/local/bin/
 
+buildah run $ctr sh -c 'mkdir -p /config && tee /config/core.conf' <<-"EOF"
+	{
+		"file": 1,
+		"format": 1
+	}{
+		"allow_remote": true,
+		"download_location": "/download"
+	}
+EOF
+
 buildah config \
 	--entrypoint '["/usr/local/bin/entrypoint.sh"]' \
 	--cmd "deluged" \
