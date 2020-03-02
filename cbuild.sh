@@ -9,7 +9,7 @@ buildah copy $ctr 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x8eed8
 buildah run $ctr apt-key add /tmp/deluge_ppa_key
 
 buildah run $ctr sh -c 'apt-get update && apt-get -y install --no-install-recommends deluged deluge-console'
-deluge_ver=$(buildah run $ctr deluged -V | head -n 1 | cut -f2 -d ' ')
+deluge_ver=$(buildah run $ctr deluged -V | head -n 1 | cut -f 2 -d ' ' | cut -f 1 -d -)
 
 buildah run $ctr sh -c "[ -d /var/lib/apt/lists ] && rm -rf /var/lib/apt/lists/*"
 
