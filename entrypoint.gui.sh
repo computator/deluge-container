@@ -12,7 +12,7 @@ create_auth () {
 if [ "$1" = 'deluge-gtk' ]; then
 	shift
 	create_auth
-	exec deluge-gtk -c /config -L info "$@"
+	exec deluge-gtk -c /config -L "${DELUGE_LOGLEVEL:-info}" "$@"
 elif [ "$1" = 'deluge-console' ] || [ "$1" = 'console' ]; then
 	shift
 	exec deluge-console -c /config "$@"
