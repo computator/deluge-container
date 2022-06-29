@@ -1,7 +1,7 @@
 FROM docker.io/library/ubuntu:18.04
 
 LABEL org.opencontainers.image.source=https://github.com/computator/deluge-container
-LABEL run='podman run -it -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY $OPT1 $IMAGE'
+LABEL run='podman run --name $NAME -it -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY $OPT1 $IMAGE'
 
 RUN set -eux; \
 	apt-get update; \
