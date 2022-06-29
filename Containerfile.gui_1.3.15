@@ -8,7 +8,6 @@ RUN set -eux; \
 	{ echo 'Package: *'; echo 'Pin: release o=LP-PPA-deluge-team'; echo 'Pin-Priority: 1000'; } | tee /etc/apt/preferences.d/deluge.pref; \
 	curl -sS 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x8eed8fb4a8e6da6dfdf0192bc5e6a5ed249ad24c' | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 apt-key add -; \
 	rm -rf /var/lib/apt/lists/*
-END
 RUN apt-get update && apt-get -y install --no-install-recommends deluge-gtk deluge-console; \
 	rm -rf /var/lib/apt/lists/*
 COPY entrypoint.gui.sh /usr/local/bin/entrypoint.sh
