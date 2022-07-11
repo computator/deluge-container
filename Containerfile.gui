@@ -1,7 +1,7 @@
 FROM docker.io/library/ubuntu
 
 LABEL org.opencontainers.image.source=https://github.com/computator/deluge-container
-LABEL run='podman run --name $NAME -it -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY $OPT1 $IMAGE'
+LABEL run='podman run --name $NAME -it -v ${NAME}-download:/download -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY $OPT1 $IMAGE'
 
 RUN set -eux; \
 	apt-get update; \
@@ -28,11 +28,14 @@ RUN set -eux; \
 		echo '	"file": 1,'; \
 		echo '	"format": 1'; \
 		echo '}{'; \
-		echo '	"standalone": false'; \
+		echo '	"standalone": false,'; \
+		echo '	"choose_directory_dialog_path": "/download"'; \
 		echo '}'; \
 	} | tee /config/gtk3ui.conf
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["deluge-gtk"]
 
+WORKDIR /download
 VOLUME /config
+VOLUME /download
